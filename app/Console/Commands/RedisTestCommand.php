@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Post;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 
 class RedisTestCommand extends Command
 {
@@ -27,10 +27,12 @@ class RedisTestCommand extends Command
      */
     public function handle()
     {
-        $posts = Post::factory(100)->create();
+    //     $post = Post::find(1);
 
-        $posts->each(function ($post) {
-            Cache::put('posts:' . $post->id, $post);
-        });
+        Redis::lpush('posts', 'post1', 'post2');
+
+        // $post = json_decode(Redis::get('posts:1'));
+        // $post = Post::make((array) $post);
+        dd(Redis::lrange('posts', 0, -1));
     }
 }
